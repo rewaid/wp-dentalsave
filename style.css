@@ -208,7 +208,7 @@ input[type=submit] {
 }
 .doctor_box p {
     margin: 0;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 30px;
 }
 .doctor_box p strong {
@@ -216,6 +216,12 @@ input[type=submit] {
 }
 .doctor_box .phone {
     margin-bottom: 20px;
+}
+.doctor_box .columns {
+    padding-top: 30px;
+}
+.doctor_box .columns:nth-child(1) {
+    padding-top: 0;
 }
 .doctor_box .columns > div {
     padding-left: 40px;

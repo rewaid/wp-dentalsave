@@ -33,16 +33,24 @@ function doctor_box ($id, $name, $img, $role, $miles, $addr, $phone, $education,
 						</div>
 					</div>
 					<div class="columns three">
+						<div class="phone">
+							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
+							<p><strong>Phone:</strong></p>
+							<p>'. $phone .'</p>
+						</div>
 						<div class="address">
 							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/address-icon.jpg" />
 							<p>'.$addr.'</p>
 							<span class="miles">'.$miles.'</span>
+						</div>						
+					</div>	
+					<div class="columns three">
+						<div class="education">
+							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/education-icon.jpg" />
+							<p><strong>Education:</strong></p>
+							<p>'. $education .'</p>
 						</div>
-						<div class="phone">
-							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
-							<p>'. $phone .'</p>
-						</div>
-					</div>					
+					</div>				
 				</div>
 			</div>';
 }
