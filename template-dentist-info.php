@@ -11,9 +11,9 @@ if ($id) {
 	$ctx=stream_context_create(array('http'=> array('timeout' => 10 )));
 	$url = "https://api.dentalsave.com/api/dentoff/".$id;
 	$response=json_decode(file_get_contents($url, false, $ctx), true);
-	$api = $response['data'];
-	$dentist = $api[0];
-	$img = "https://api.dentalsave.com/api/images/providers/" . $dentist['DENTID']. ".jpg";
+	$dentist = $response['data'];
+	$img = "https://api.dentalsave.com/api/images/providers/" . $dentist['PICTID']. ".jpg";
+
 	$addr = $dentist['Address'] .'<br>';
 	if ($dentist['Address2'] != '') $addr .= $dentist['Address2'] .'<br>';
 	$addr .= $dentist['City'] .', '. $dentist['State'] .' '. $dentist['ZipCode'];  
@@ -65,20 +65,20 @@ if ($id) {
 		</div>
 		<div class="row">
 			<div class="row">
-				<div class="columns four"><p>Education</p></div>
-				<div class="columns four"><p><?php echo $dentist['School'];?></p></div>
+				<div class="columns four dfd_col-mobile-4"><p>Education</p></div>
+				<div class="columns four dfd_col-mobile-8"><p><?php echo $dentist['School'];?></p></div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="row">
-				<div class="columns four"><p>Experience</p></div>
-				<div class="columns four"><p><?php echo $dentist['Experience'];?></p></div>
+				<div class="columns four dfd_col-mobile-4"><p>Experience</p></div>
+				<div class="columns four dfd_col-mobile-8"><p><?php echo $dentist['Experience'];?></p></div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="row">
-				<div class="columns four"><p>Languages</p></div>
-				<div class="columns four"><p><?php echo $languages;?></p></div>
+				<div class="columns four dfd_col-mobile-4"><p>Languages</p></div>
+				<div class="columns four dfd_col-mobile-8"><p><?php echo $languages;?></p></div>
 			</div>
 		</div>
 		<div class="row officehours">
@@ -93,8 +93,8 @@ if ($id) {
 					list($day, $last) = explode(" ", $hour, 2);
 					?>
 					<div class="row">
-						<div class="columns four"><p><?php echo $day; ?></p></div>
-						<div class="columns four"><p><?php echo $last;?></p></div>
+						<div class="columns four dfd_col-mobile-4"><p><?php echo $day; ?></p></div>
+						<div class="columns four dfd_col-mobile-8"><p><?php echo $last;?></p></div>
 					</div>
 					<?php
 				}
@@ -108,7 +108,7 @@ if ($id) {
 		</div>
 	</div>
 	<div class="row fee_schedule">
-		<div class="columns three">
+		<div class="columns three  dfd_col-mobile-6">
 			<div class="title">CDT code</div>
 			<div class="content">
 				<p>D1231</p>
@@ -116,7 +116,7 @@ if ($id) {
 				<p>D1256</p>
 			</div>
 		</div>
-		<div class="columns three">
+		<div class="columns three  dfd_col-mobile-6">
 			<div class="title">Procedure</div>
 			<div class="content">
 				<p>Cleaning</p>
@@ -124,7 +124,7 @@ if ($id) {
 				<p>Teeth whitening</p>
 			</div>
 		</div>
-		<div class="columns three">
+		<div class="columns three dfd_col-mobile-6">
 			<div class="title">Regular fee</div>
 			<div class="content">
 				<p>$120</p>
@@ -132,7 +132,7 @@ if ($id) {
 				<p>$300</p>
 			</div>
 		</div>
-		<div class="columns three">
+		<div class="columns three dfd_col-mobile-6">
 			<div class="title">Member fee</div>
 			<div class="content">
 				<p>%60</p>
@@ -141,16 +141,15 @@ if ($id) {
 			</div>
 		</div>
 	</div>
+	<div>
+		<?php 
+		$fee_schedule = 'http://dentalsave.com/' . $dentist['FeeUrl'];
+		$encode_feed_schedule = urlencode($fee_schedule);
+		echo do_shortcode('[ult_buttons btn_title="Click here to view complete fee schedule" btn_link="url:'.$encode_feed_schedule.'||" btn_align="ubtn-center" btn_title_color="#ffffff" btn_bg_color="#69c8f1" btn_hover="ubtn-fade-bg" btn_bg_color_hover="#ffffff" btn_title_color_hover="#69c8f1" btn_icon_pos="ubtn-sep-icon-at-left" btn_font_size="13" notification=""]');
+		?>
+	</div>
 </div>
-<div>
-	<?php 
-	$fee_schedule = 'http://dentalsave.com/' . $dentist['FeeUrl'];
-	$encode_feed_schedule = urlencode($fee_schedule);
-	print_r($encode_feed_schedule);
-	do_action('[ult_buttons btn_title="Click here to view complete fee schedule" btn_link="url:'.$encode_feed_schedule.'||" btn_align="ubtn-center" btn_title_color="#ffffff" btn_bg_color="#69c8f1" btn_hover="ubtn-fade-bg" btn_bg_color_hover="#ffffff" btn_title_color_hover="#69c8f1" btn_icon_pos="ubtn-sep-icon-at-left" btn_font_size="15" notification=""]');
-	?>
-	<a href="#" class="btn">Click here to view complete fee schedule</a>
-</div>
+
 	<?php
 } else {
 	echo "No Result Found";

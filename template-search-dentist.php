@@ -25,8 +25,8 @@ function doctor_box ($id, $name, $img, $role, $miles, $addr, $phone, $education,
 					</div>
 					<div class="columns three">
 						<div class="details">
-							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
-							<p class="doctor-name">'. $name .'</p>
+							<img src="//dev.dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
+							<a class="doctor-name" href="//dev.dentalsave.com/dentist-info/'.$_id.'-'.$url_name.'">'. $name .'</a>
 							<p class="office-name">'. $officeName .'</p>
 							<p class="role">'. $role .'</p>		
 							<p class="network">'.$network.'</p>					
@@ -263,7 +263,7 @@ if ($zip != 0) {
 <?php if (isset($_POST['submit']) && $counts == 0) { ?>
 <p>No Search Results</p>
 <?php }
-if (!isset($_POST['submit'])) {
+if (!(isset($_POST['submit']) || isset($_POST['page']))) {
 ?>
 <?php while (have_posts()) : the_post(); ?>
 	<?php the_content(); ?>

@@ -342,6 +342,7 @@ input[type=submit] {
     margin: auto;
 }
 
+
 .dentist-info .map iframe{
     display: block;
     width: 100%;
@@ -389,6 +390,11 @@ input[type=submit] {
     margin: 0;
     line-height: 40px;
     border-top: 1px solid #68c9f2;
+}
+
+.dentist-info .professional_details, 
+.dentist-info .sample_schedule {
+    padding: 0 20px;
 }
 /* How it works */
 
