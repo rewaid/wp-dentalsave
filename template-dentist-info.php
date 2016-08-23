@@ -8,18 +8,27 @@ Template Name: Dentist Info
 $params = explode("-", $wp_query->query_vars['dentist_info']);
 $id = $params[0];
 if ($id) {
-	$ctx=stream_context_create(array('http'=> array('timeout' => 10 )));
+	$ctx=stream_context_create(
+		array(
+		    "ssl"=>array(
+		        "verify_peer"=>false,
+		        "verify_peer_name"=>false,
+		    ),
+		    'http' => array(
+		    	'timeout' => 10
+		    )
+		));
 	$url = "https://api.dentalsave.com/api/dentoff/".$id;
 	$response=json_decode(file_get_contents($url, false, $ctx), true);
 	$dentist = $response['data'];
-	$img = "https://api.dentalsave.com/api/images/providers/" . $dentist['PICTID']. ".jpg";
+	$img = "https://api.dentalsave.com/api/images/providers/" . $dentist['DENTID']. ".jpg";
 
 	$addr = $dentist['Address'] .'<br>';
 	if ($dentist['Address2'] != '') $addr .= $dentist['Address2'] .'<br>';
 	$addr .= $dentist['City'] .', '. $dentist['State'] .' '. $dentist['ZipCode'];  
 	$g_addr = str_replace ("<br>", " ", $addr);
 
-	$languages = $dentist['LANGS'];
+	$languages = 'English, '.$dentist['LANGS'];
 
 	$fee_schedule = 'http://dentalsave.com/' . $dentist['FeeUrl'];
 	
@@ -31,7 +40,7 @@ if ($id) {
 		</div>
 		<div class="columns four">
 			<div class="details">
-				<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
+				<img src="http://dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
 				<p class="doctor-name"><?php echo $dentist['DentistName']; ?></p>
 				<p class="office-name"><?php echo $dentist['OfficeName']; ?></p>
 				<p class="role"><?php echo $dentist['Special1']; ?></p>		
@@ -40,12 +49,12 @@ if ($id) {
 		</div>
 		<div class="columns four">
 			<div class="address">
-				<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/address-icon.jpg" />
+				<img src="http://dentalsave.com/wp-content/uploads/2016/06/address-icon.jpg" />
 				<p><?php echo $addr; ?></p>
 				<span class="miles"><?php echo sprintf ("Miles %.2f", $dentist['dis']); ?></span>
 			</div>
 			<div class="phone">
-				<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
+				<img src="http://dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
 				<p><?php echo $dentist['Phone'] ?></p>
 			</div>
 			
@@ -72,7 +81,7 @@ if ($id) {
 		<div class="row">
 			<div class="row">
 				<div class="columns four dfd_col-mobile-4"><p>Experience</p></div>
-				<div class="columns four dfd_col-mobile-8"><p><?php echo $dentist['Experience'];?></p></div>
+				<div class="columns four dfd_col-mobile-8"><p><?php echo $dentist['Experience'];?> Years</p></div>
 			</div>
 		</div>
 		<div class="row">
@@ -135,9 +144,9 @@ if ($id) {
 		<div class="columns three dfd_col-mobile-6">
 			<div class="title">Member fee</div>
 			<div class="content">
-				<p>%60</p>
-				<p>%70</p>
-				<p>%100</p>
+				<p>$60</p>
+				<p>$70</p>
+				<p>$100</p>
 			</div>
 		</div>
 	</div>

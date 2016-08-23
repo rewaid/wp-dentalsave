@@ -25,8 +25,8 @@ function doctor_box ($id, $name, $img, $role, $miles, $addr, $phone, $education,
 					</div>
 					<div class="columns three">
 						<div class="details">
-							<img src="//dev.dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
-							<a class="doctor-name" href="//dev.dentalsave.com/dentist-info/'.$_id.'-'.$url_name.'">'. $name .'</a>
+							<img src="//dentalsave.com/wp-content/uploads/2016/06/man-icon.jpg" />
+							<a class="doctor-name" href="//dentalsave.com/dentist-info/'.$_id.'-'.$url_name.'">'. $name .'</a>
 							<p class="office-name">'. $officeName .'</p>
 							<p class="role">'. $role .'</p>		
 							<p class="network">'.$network.'</p>					
@@ -34,19 +34,19 @@ function doctor_box ($id, $name, $img, $role, $miles, $addr, $phone, $education,
 					</div>
 					<div class="columns three">
 						<div class="phone">
-							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
+							<img src="http://dentalsave.com/wp-content/uploads/2016/06/contact-icon.jpg" />
 							<p><strong>Phone:</strong></p>
 							<p>'. $phone .'</p>
 						</div>
 						<div class="address">
-							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/address-icon.jpg" />
+							<img src="http://dentalsave.com/wp-content/uploads/2016/06/address-icon.jpg" />
 							<p>'.$addr.'</p>
 							<span class="miles">'.$miles.'</span>
 						</div>						
 					</div>	
 					<div class="columns three">
 						<div class="education">
-							<img src="http://dev.dentalsave.com/wp-content/uploads/2016/06/education-icon.jpg" />
+							<img src="http://dentalsave.com/wp-content/uploads/2016/06/education-icon.jpg" />
 							<p><strong>Education:</strong></p>
 							<p>'. $education .'</p>
 						</div>
@@ -65,8 +65,8 @@ $redirect = false;
 
 $uri = explode("/", $_SERVER['REQUEST_URI']);
 
-session_start();
 
+session_start();
 if ((isset($_POST['submit']) && ($_POST['submit'] == 'Search' || $_POST['submit'] == 'Apply')) || isset($_POST['page'])) {
 	$zip = $_POST['zip'];
 	$miles = $_POST['miles'];
@@ -75,6 +75,7 @@ if ((isset($_POST['submit']) && ($_POST['submit'] == 'Search' || $_POST['submit'
 	$specialty = $_POST['specialty'];
 	$officetype = $_POST['officetype'];
 	$redirect = true;
+	
 } else if (isset($_GET['zip'])) {
 	$zip = $_GET['zip'];
 	$miles = $_GET['miles'];
@@ -123,61 +124,29 @@ if ($zip != 0) {
 		if ($specialty == '') $specialty = 0;
 		$first = ($f_name == '' || $f_name == ' ' || $f_name == 'First Name') ? 0 : $f_name;
 		$last = ($l_name == '' || $l_name == ' ' || $l_name == 'Last Name') ? 0 : $l_name;
+		$officetype = ($officetype == '') ? 0 : $officetype;
+		$url = "https://api.dentalsave.com/api/dentoff?zip=". sprintf("%05s", $zip) ."&miles=". $miles ."&first=". $first ."&last=". $last ."&practice=0&specialty=". $specialty ."&startpos=". $start ."&map=0&officetype=".$officetype;
 
-		$url = "https://api.dentalsave.com/api/dentoff?zip=". sprintf("%05s", $zip) ."&miles=". $miles ."&first=". $first ."&last=". $last ."&practice=0&specialty=". $specialty ."&startpos=". $start ."&map=0&officetype=0";
-//echo $url;		
-		$response=json_decode(file_get_contents($url, false, $ctx), true);
+		// echo $url;
+		$arrContextOptions=array(
+		    "ssl"=>array(
+		        "verify_peer"=>false,
+		        "verify_peer_name"=>false,
+		    ),
+		    'http' => array(
+		    	'timeout' => 10
+		    )
+		);  
+		
+// echo $url;		
+		$response=json_decode(file_get_contents($url, false, stream_context_create($arrContextOptions)), true);
 		$api = $response['data'];
 //echo count($api). ' 1<br>';
 //echo $api[count($api)-1]['reccount']. ' 2<br>';
 		$counts = $api[count($api)-1]['reccount'];
 		if ($counts > 0) {
 			$i = 0;
-			?>
-			<div class="near-search-result">
-				<div class="row">
-					<h1>DentalSave participating dentists.</h1>
-					<p class="hide-mobile">Explore a unique dental experience. From a routine check up  to a complex to dental implant, you'll find a great dental professional for your need. Discover a neighborhood dentist for your and your family needs at DentalSave fees.</p>
-					<form id="search-filter" method="post">
-						<input type="hidden" name="zip" value="<?php echo $zip?>" />
-						<input type="hidden" name="miles" value="<?php echo $miles?>" />
-						<input type="hidden" name="l_name" value="<?php echo $l_name?>" />
-						<div class="control">
-							<span>Filter</span>
-						</div>
-						<div class="control">
-							<select class="specialty" name="specialty">
-								<option value="0" <?php if ($specialty == 0) echo 'selected'; ?>>Specialty</option>
-								<option value="0" >All</option>
-								<option value="187" <?php if ($specialty == 187) echo 'selected'; ?>>Endodontist</option>
-								<option value="118" <?php if ($specialty == 118) echo 'selected'; ?>>General Dentist</option>
-								<option value="210" <?php if ($specialty == 210) echo 'selected'; ?>>Holistic</option>
-								<option value="1178" <?php if ($specialty == 1178) echo 'selected'; ?>>Implantology</option>
-								<option value="119" <?php if ($specialty == 119) echo 'selected'; ?>>Oral Surgeon</option>
-								<option value="186" <?php if ($specialty == 186) echo 'selected'; ?>>Orthodontist</option>
-								<option value="190" <?php if ($specialty == 190) echo 'selected'; ?>>Pedodontist</option>
-								<option value="188" <?php if ($specialty == 188) echo 'selected'; ?>>Periodontist</option>
-								<option value="189" <?php if ($specialty == 189) echo 'selected'; ?>>Prosthodontist</option>
-								<option value="191" <?php if ($specialty == 191) echo 'selected'; ?>>T.M.J Specialist</option>
-							</select>
-							<i class="fa fa-caret-down"></i>
-						</div>
-						<div class="control">
-							<select class="officetype" name="officetype">
-								<option value="0" <?php if ($officetype == 0) echo 'selected'; ?>>Network</option>
-								<option value="0">All</option>
-								<option value="1" <?php if ($officetype == 1) echo 'selected'; ?>>DentalSave</option>
-								<option value="2" <?php if ($officetype == 2) echo 'selected'; ?>>Careington</option>								
-							</select>
-							<i class="fa fa-caret-down"></i>
-						</div>
-						<div class="control">
-							<input type="submit" name="submit" value="Apply" />
-						</div>
-					</form>
-				</div>
-			</div>
-			<?php
+			include(locate_template('partial/filter.php'));
 			foreach ($api as $dentist) {
 //if ($i == 0) print_r ($dentist);			
 				if (++$i >= count($api)) break;
@@ -260,9 +229,18 @@ if ($zip != 0) {
 			</form>
 <?php	}	?>	
 
-<?php if (isset($_POST['submit']) && $counts == 0) { ?>
-<p>No Search Results</p>
-<?php }
+<?php if (isset($_POST['submit']) && $counts == 0) { 
+	include(locate_template('partial/filter.php'));
+	echo do_shortcode('[dfd_spacer screen_wide_resolution="1280" screen_wide_spacer_size="100" screen_normal_resolution="1024" screen_tablet_resolution="800" screen_mobile_resolution="480" screen_normal_spacer_size="100" screen_tablet_spacer_size="100" screen_mobile_spacer_size="50"]');
+	?>
+	<center>
+	<h1>No Results</h1>
+	<p>New dentists join dentalsave every day.<br/>
+	So try again soon!</p>
+	</center>
+<?php 
+	echo do_shortcode('[dfd_spacer screen_wide_resolution="1280" screen_wide_spacer_size="100" screen_normal_resolution="1024" screen_tablet_resolution="800" screen_mobile_resolution="480" screen_normal_spacer_size="100" screen_tablet_spacer_size="100" screen_mobile_spacer_size="50"]');
+}
 if (!(isset($_POST['submit']) || isset($_POST['page']))) {
 ?>
 <?php while (have_posts()) : the_post(); ?>
@@ -292,6 +270,7 @@ if (!(isset($_POST['submit']) || isset($_POST['page']))) {
 						<option value="189" <?php if ($specialty == 189) echo 'selected'; ?>>Prosthodontist</option>
 						<option value="191" <?php if ($specialty == 191) echo 'selected'; ?>>T.M.J Specialist</option>
 					</select>
+					<i class="fa fa-caret-down"></i>
 				</div>
 				<div class="select-box">			
 					<select class="miles" name="miles">
@@ -302,6 +281,7 @@ if (!(isset($_POST['submit']) || isset($_POST['page']))) {
 						<option value="10" <?php if ($miles == 10) echo 'selected'; ?>>10 Miles</option>
 						<option value="25" <?php if ($miles == 25) echo 'selected'; ?>>25 Miles</option>
 					</select>
+					<i class="fa fa-caret-down"></i>
 				</div>
 			</div>
 			<input type="submit" value="Search" name="submit" />
