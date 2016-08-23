@@ -464,9 +464,14 @@
 						</div>
 					</div>
 					<div class="section profile-renewed-cong center <?php if ($visible_section == 'payment-confirmation') echo 'visible'; ?>">
+					<?php if ($_GET['option'] == 'inactive' || $_GET['option'] == 'renewal_no' || $_GET['option'] == 'renewal_yes') : ?>
 						<h4>Congratulations!</h4>
-						<p>Congratulations! You have renewed your membership.</p>
-					</div>
+						<p>You have renewed your membership.</p>
+					<?php elseif ($_GET['option'] == 'pending') : ?>
+						<h4>Congratulations!</h4>
+						<p>Your membership has been activated.</p>
+					<?php endif; ?>
+					</div>					
 				</div>
 
 				<div class="profile-password twelve columns">
@@ -1049,7 +1054,18 @@
 				hideLoadingIcon();
 				hideAllContents();
 				// $('.user-dashboard .profile-payment .profile-renewed-cong').addClass('visible');
-				getUser(userObj.data.id, userObj.data.password, 'payment-confirmation');
+				var status = "<?php echo $status; ?>";
+				var option = "";
+				if (status == "Active" && userObj.data.autopayment == 1) {
+					option = "renewal_no";
+				} else if (status == "Active" && userObj.data.autopayment == 0) {
+					option = "renewal_yes";
+				} else if (status == "Pending") {
+					option = "pending";
+				} else if (status == "Inactive") {
+					option = "inactive";
+				}
+				getUser(userObj.data.id, userObj.data.password, 'payment-confirmation', option);
 				// hideLoadingIcon();
 			})
 			.fail(function(error) {
@@ -1079,34 +1095,10 @@
 		var dob_day = $('.user-dashboard .edit-additinonal-members .dob_day').val();
 		var dob_year = $('.user-dashboard .edit-additinonal-members .dob_year').val();			
 		var gender = $('.user-dashboard .edit-additinonal-members input:radio[name=signup_gender]:checked').val();
-
 		
-		/*
-		if (!$error) {
-			$('.user-dashboard .edit-additinonal-members .required').each(function(item) {	
-				$(this).val('');			
-			});
-			var dob = dob_month + '/' + dob_day + '/' + dob_year;
-			var html = '<div class="row"><div class="five columns dfd_col-mobile-5"><p>' + first_name + ' ' + last_name+'</p></div><div class="thee columns dfd_col-mobile-4"><p>'+dob+'</p></div><div class="two columns dfd_col-mobile-2"><p>'+gender+'</p></div><div class="one columns dfd_col-mobile-1"><a href="'+formData.step1.additional.length+'" class="remove_user">X</a></div></div>';
-			var html1 = '<p><i class="fa fa-user"></i> ' + first_name + ' ' + last_name+' <i class="fa fa-circle"></i> '+dob+' <i class="fa fa-circle"></i> '+gender+'</p>';
-			$('.step1 .additional_members').append(html);
-			$t.find('.step1_desc .item2').append(html1);
-			var obj = {
-				fn: first_name,
-				ln: last_name,
-				gender: gender[0],
-				dob: dob
-			}
-			formData.step1.additional.push(obj);
-
-			if (formData.step1.additional.length == 6)
-				$t.find('.step1_addmore_edit').css('display', 'none');
-
-			$t.find('.step1 .edit_additional_member').css('display', 'none');
-		}*/
 	});
 
-	function getUser(memberid, password, state) {
+	function getUser(memberid, password, state, option) {
 		var params = memberid + "?password=" + password;
 		$.ajax({
 			type: "GET",
@@ -1118,7 +1110,11 @@
 			var user = JSON.stringify(respond);			
 			setCookie('user', user, 3);
 			hideLoadingIcon();
-			window.location = "/user-dashboard/?state=" + state;
+			var additonal_params = '';
+			if (option != undefined) {
+				additonal_params = "&option=" + option;
+			}
+			window.location = "/user-dashboard/?state=" + state + additonal_params;
 		})
 		.fail(function(error) {
 			hideLoadingIcon();
