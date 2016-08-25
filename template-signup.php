@@ -380,7 +380,7 @@ $state_list = array('AK', 'AZ', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 
 					<div class="row">
 						<div class="eleven columns">
 							<p><i class="fa fa-credit-card"></i> PLAN ANNUAL <span class="plan_anuual_v"></span> <i class="fa fa-circle"></i> RENEWAL <span class="renewal_v"></span></p>
-							<p><i class="fa fa-credit-card fa-white"></i> GROUP #<span class="group_v"></span> <i class="fa fa-circle"></i> BROKER #<span class="broker_v"></span></p>
+							<p><i class="fa fa-credit-card fa-white"></i> GROUP ID<span class="group_v"></span> <i class="fa fa-circle"></i> BROKER ID<span class="broker_v"></span></p>
 						</div>
 						<div class="one columns">
 							<a href="#" class="step2_edit">EDIT</a>
@@ -410,13 +410,13 @@ $state_list = array('AK', 'AZ', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 
 					</div>
 					<div class="row">
 						<div class="six columns">
-							<label>Group ID</label>
+							<label>Group ID if Applicable</label>
 							<input type="number" name="additional_groupId" class="additional_groupId" />
 							<p class="error">This field is required</p>
 							<p class="error error-invalid">This field is invalid</p>
 						</div>
 						<div class="six columns">
-							<label>Broker ID</label>
+							<label>Broker ID if Applicable</label>
 							<input type="number" name="additional_brokerId" class="additional_brokerId" />
 							<p class="error">This field is required</p>
 							<p class="error error-invalid">This field is invalid</p>

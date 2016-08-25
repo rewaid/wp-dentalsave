@@ -856,7 +856,7 @@
 		if (!$error) {
 			var userObj = JSON.parse(getCookie('user'));
 			// var params = https://api.dentalsave.com/api/membership/changepass?clientno=C777777&password=123&newpassword=1234567
-			var params = "?clientno=C0" + userObj.data.id + "&password=" + old_password + "&newpassword=" + new_password;
+			var params = "?clientno=" + userObj.data['client code'] + "&password=" + old_password + "&newpassword=" + new_password;
 
 			showLoadingIcon();
 
@@ -958,11 +958,11 @@
 
 		if (!$error) {
 			showLoadingIcon();
-			var param = userObj.data.id + "&fn=" + userObj.data['first name'] + "&ln=" + userObj.data['last name'] + "&email=" + userObj.data.email + "&add1=" + userObj.data.address + "&add2=" + (userObj.data.address2 || 0) + "&city=" +userObj.data.city+ "&state=" + userObj.data.state + "&zip=" + userObj.data.zip + "&phoneno=" + userObj.data['home phone'];
+			var param = userObj.data['client code'] + "?" + "&fn=" + userObj.data['first name'] + "&ln=" + userObj.data['last name'] + "&email=" + userObj.data.email + "&add1=" + userObj.data.address + "&add2=" + (userObj.data.address2 || 0) + "&city=" +userObj.data.city+ "&state=" + userObj.data.state + "&zip=" + userObj.data.zip + "&phoneno=" + userObj.data['home phone'];
 
 			$.ajax({
 				type: "POST",
-				url: "http://api.dentalsave.com/api/memberinforefer/"+param,
+				url: "https://api.dentalsave.com/api/membership/refer/"+param,
 				timeout: 10000
 			})
 			.done(function(res) {
