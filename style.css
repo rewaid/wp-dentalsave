@@ -1142,10 +1142,13 @@ table.blue-table {
 .user-dashboard .tab-box .item {
     border-bottom: 1px solid #cdcdcd;   
     font-size: 18px;
-    padding: 20px;
     cursor: pointer;
 }
-.user-dashboard .tab-box .active, .user-dashboard .tab-box .item:hover {
+.user-dashboard .tab-box .item a {
+    display: block;
+    padding:  20px;
+}
+.user-dashboard .tab-box .active a, .user-dashboard .tab-box .item:hover a{
     background-color: #69c8f1;
     color: white;
 }
