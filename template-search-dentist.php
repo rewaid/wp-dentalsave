@@ -296,8 +296,8 @@ if ($zip == 0) { //!isset($_POST['submit']) &&
       <div class="padding-wrapper">
         <div class="form-container">
           <input type="hidden" name="miles" value="25" />
-          <input type="text" name="l_name" class="lastname" placeholder="Dentist Last Name" />
-          <input type="text" name="zip" class="zip" placeholder="Dentist Zip Code" />
+          <input type="text" name="l_name" class="lastname" placeholder="Dentist Last Name" required/>
+          <input type="text" name="zip" class="zip" placeholder="Dentist Zip Code" required/>
         </div>
       </div>
       <input type="submit" value="Search" name="submit" />
