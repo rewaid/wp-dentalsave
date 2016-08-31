@@ -26,8 +26,8 @@
   }
 
   $visible_section = $_GET['state'];
-  if (!(isset($_GET['state']) && ( $_GET['state'] == 'details-confirmation' || $_GET['state'] == 'password-confirmation' || $_GET['state'] == 'profile-confirmation' || $_GET['state'] == 'payment-confirmation'))) {
-    $visible_section = 'default';
+  if ((isset($_GET['state']) && ( $_GET['state'] == 'details-confirmation' || $_GET['state'] == 'password-confirmation' || $_GET['state'] == 'profile-confirmation' || $_GET['state'] == 'payment-confirmation'))) {
+    $tab = '';
   }
 ?>
 
@@ -108,7 +108,7 @@
                   <div class="three columns dfd_col-mobile-3">
                     <p>Status: <?php echo  $user->family[$i]->{'family type'}; ?></p>
                   </div>
-                  <div class="one columns dfd_col-mobile-2"><a href="#" class="edit-family-member" data-index="0">Edit</a>	</div>
+                  <div class="one columns dfd_col-mobile-2"><a href="#" class="edit-family-member" data-index="<?php echo $i; ?>">Edit</a>	</div>
 
                 </div>
               <?php } ?>
@@ -193,9 +193,18 @@
               </div>
             </div>
             <div class="row">
-              <div class="twelve columns">
-                <Label>Male<input type="radio" name="signup_gender" value="MALE" checked="checked" /></Label>
-                <Label>Female<input type="radio" name="signup_gender" value="FEMALE" /></Label>
+              <div class="six columns">
+                <Label>Male<input type="radio" name="signup_gender" value="M" checked="checked" /></Label>
+                <Label>Female<input type="radio" name="signup_gender" value="F" /></Label>
+              </div>
+              <div class="six columns">
+                <div class="select-box status invisible">
+                  <select name="status">
+                    <option value="131">On Plan</option>
+                    <option value="132">Off Plan</option>
+                  </select>
+                  <i class="fa fa-caret-down"></i>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -244,7 +253,7 @@
             <br/>
             <div class="row">
               <div class="six columns">
-                <a href="#" class="edit-additinonal-members-submit btn pull-left" data-type="POST">Submit</a>
+                <a href="#" class="edit-additinonal-members-submit btn pull-left" data-type="POST" data-index="0">Submit</a>
               </div>
             </div>
           </div>
@@ -696,9 +705,15 @@
       $('.user-dashboard .edit-additinonal-members .dob_month').val(date.getMonth());
       $('.user-dashboard .edit-additinonal-members .dob_day').val(date.getDate());
       $('.user-dashboard .edit-additinonal-members .dob_year').val(date.getFullYear());
-      $('.user-dashboard .edit-additinonal-members-submit').data('type', 'PUT');
+      var familytype = 131;
+      if (userObj.family[$(this).data('index')]['family type'] == 'Off Plan') { familytype = 132; }
+      $('.user-dashboard .edit-additinonal-members .status option[value="'+familytype+'"]').prop('selected', true);
+      $('.user-dashboard .edit-additinonal-members .status').removeClass('invisible');
+      $('.user-dashboard .edit-additinonal-members .edit-additinonal-members-submit').data('type', 'PUT');
+      $('.user-dashboard .edit-additinonal-members .edit-additinonal-members-submit').data('index', $(this).data('index'));
     } else {
-      $('.user-dashboard .edit-additinonal-members-submit').data('type', 'POST');
+      $('.user-dashboard .edit-additinonal-members .edit-additinonal-members-submit').data('type', 'POST');
+      $('.user-dashboard .edit-additinonal-members .status').removeClass('invisible').addClass('invisible');
     }
 
     $('.user-dashboard .main-container .profile-box .edit-additinonal-members').addClass('visible');
@@ -738,12 +753,7 @@
       var add1 = $('.user-dashboard .edit-profile-details .address').val();
       var add2 = $('.user-dashboard .edit-profile-details .address2').val() || 0;
 
-
-
-
       var params = userObj.data['id']+"?fn="+fn+"&ln="+ln+"&email="+email+"&receiveoffers="+receiveoffers+"&dob="+dob+"&gender="+gender+"&add1="+add1+"&add2="+add2+"&city="+city+"&state="+state+"&zip="+zipcode+"&phoneno="+phone;
-
-      console.log(params);
 
       showLoadingIcon();
 
@@ -753,7 +763,6 @@
         timeout: 10000
       })
       .done(function(respond) {
-        console.log(respond);
         getUser(userObj.data.id, userObj.data.password, 'details-confirmation');
         // hideLoadingIcon();
       })
@@ -766,6 +775,7 @@
   $('.user-dashboard .edit-additinonal-members-submit').on('click', function(e) {
     e.preventDefault();
     var userObj = JSON.parse(getCookie('user'));
+    var selectedIndex = $(this).data('index');
     $error = false;
     $('.user-dashboard .edit-additinonal-members .required').each(function(item) {
       if ($(this).val() == '') {
@@ -781,33 +791,49 @@
     var dob_day = $('.user-dashboard .edit-additinonal-members .dob_day').val();
     var dob_year = $('.user-dashboard .edit-additinonal-members .dob_year').val();
     var gender = $('.user-dashboard .edit-additinonal-members input:radio[name=signup_gender]:checked').val();
+    var familytype = $('.user-dashboard .edit-additinonal-members .status select').val();
+
     if (dob_month == '' || dob_day == '' || dob_year == '') {
       $('.user-dashboard .edit-additinonal-members .date_of_birth .error').removeClass('error-visible').addClass('error-visible');
       $error = true;
       return;
     }
-    var url = "";
+    var url = "https://api.dentalsave.com/api/membership/additionalmember/", params = "";
     if (requestType == "POST") {
       url = "https://api.dentalsave.com/api/membership/addmember/" + userObj.data['id'] + "/?&famfn="+fn+"&famln="+ln+"&famdob="+dob_month + "/" + dob_day + "/" + dob_year +"&famgender="+gender+"&famtype=On Plan";
     } else {
-      url = userObj.data['id'] + "/?&";
-      var famCounts = Math.max(userObj.family.length, 6);
+      userObj.family[selectedIndex]['first name'] = fn;
+      userObj.family[selectedIndex]['last name'] = ln;
+      userObj.family[selectedIndex]['dob'] = new Date(dob_year, dob_month, dob_day);
+      userObj.family[selectedIndex]['gender'] = gender;
+      userObj.family[selectedIndex]['family type'] = familytype;
+
+      url += userObj.data['id'] + "/?";
+      var famCounts = 6; //Math.max(userObj.family.length, 6);
       for (var i = 0; i < famCounts; i++) {
         var element = {};
         var dob = '';
         if (userObj.family[i] == null ) {
           element = {
+            'id': 0,
             'first name': 0,
             'last name': 0,
             'dob': 0,
-            gender: '0',
+            'gender': '0',
+            'family type': 0
           }
         } else {
           element = userObj.family[i];
           var date = new Date(element.dob);
           dob = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
+          element.dob = dob;
+          if (element['family type'] == 'On Plan') {
+            element['family type'] = 131;
+          } else if (element['family type'] == 'Off Plan') {
+            element['family type'] = 132;
+          }
         }
-        params += "&fam" + (i + 1) + "fn="+ element['first name'] + "&fam" + (i + 1) + "ln="+ element['last name'] + "&fam" + (i + 1) + "dob="+ dob + "&fam" + (i + 1) + "gender="+ element.gender.charAt(0);
+        url += "&fam" + (i + 1) + "id=" + element.id + "&fam" + (i + 1) + "fn="+ element['first name'] + "&fam" + (i + 1) + "ln="+ element['last name'] + "&fam" + (i + 1) + "dob="+ element.dob + "&fam" + (i + 1) + "gender="+ element.gender.charAt(0) + "&fam" + (i + 1) + "type=" + element['family type'];
       }
     }
     showLoadingIcon();
@@ -817,17 +843,12 @@
       timeout: 10000
     })
     .done(function(respond) {
-      console.log(respond);
       hideLoadingIcon();
       getUser(userObj.data.id, userObj.data.password, 'details-confirmation');
     })
     .fail(function(error) {
       hideLoadingIcon();
     });
-
-//		https://api.dentalsave.com/api/membership/addmember/C0167508/?&famfn=Nancy7&famln=Tomaselli&famdob=10/4/1953&famgender=F&famtype=On Plan
-
-
   });
 
   // change password
@@ -867,7 +888,6 @@
         timeout: 10000
       })
       .done(function(respond) {
-        console.log(respond);
         if (!respond.data.success) {
           $('.user-dashboard .edit-password .error-request').removeClass('error-visible').addClass('error-visible');
         } else {
@@ -913,7 +933,6 @@
       timeout: 10000
     })
     .done(function(respond) {
-      console.log(respond);
       renewalObj = respond.renewal;
       renewalObj.autorenewal = autorenewal;
       renewalObj.payoption = payoption;
