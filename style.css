@@ -12,6 +12,15 @@ Version:        1.0.0
     position: fixed !important;
     background: transparent;
   }
+
+}
+@media only screen and (min-width: 1101px) {
+  #header-container.logo-position-left:not(.small) .header-col-right {
+    width: 80px !important;
+  }
+  #header-container.logo-position-left:not(.small) .header-col-fluid {
+    margin-right: 80px !important;
+  }
 }
 @media only screen and (max-width: 800px) {
   .dfd-side-by-side-mode-custom #header-container #header .header-wrap > .row:last-child {
@@ -26,12 +35,21 @@ Version:        1.0.0
 .invisible {
   display: none;
 }
+#sidr {
+  background-color: #69c8f1;
+}
+#dfd_logo-2 {
+  padding-top: 20px;
+}
 .sidr .sidr-inner > ul > li > a {
     font-size: 25px !important;
     line-height: 35px;
 }
-.d_hide {
+.d_hide, .alogin, .user-logged-in .blogin, .dashboard-log-out {
     display: none !important;
+}
+.user-logged-in .alogin, .user-logged-in .dashboard-log-out {
+  display: block !important;
 }
 @media only screen and (max-width: 799px) {
     .d_hide {
@@ -62,6 +80,7 @@ nav.mega-menu {
 .header-col-fluid .find-btn {
     float:  left;
     position: relative;
+    margin-left: -50px;
 }
 .small .header-col-fluid .find-btn {
     margin-top: 10px;
@@ -1227,8 +1246,8 @@ table.blue-table {
     word-spacing: 0;
     text-decoration: none;
     text-align: center;
-    height: 30px;
-    line-height: 30px;
+    /*height: 30px;
+    line-height: 30px;*/
     padding: 0 20px;
     overflow: hidden;
     float:  right;

@@ -253,7 +253,7 @@
             <br/>
             <div class="row">
               <div class="six columns">
-                <a href="#" class="edit-additinonal-members-submit btn pull-left" data-type="POST" data-index="0">Submit</a>
+                <input type="button" class="edit-additinonal-members-submit btn pull-left" data-type="POST" data-index="0" value="Submit" />
               </div>
             </div>
           </div>
@@ -721,6 +721,7 @@
 
   $('.user-dashboard .edit-profile-details-submit').on('click', function(event) {
     event.preventDefault();
+    return;
     var userObj = JSON.parse(getCookie('user'));
 
     $('.user-dashboard .edit-profile-details .error').removeClass('error-visible');
@@ -753,7 +754,7 @@
       var add1 = $('.user-dashboard .edit-profile-details .address').val();
       var add2 = $('.user-dashboard .edit-profile-details .address2').val() || 0;
 
-      var params = userObj.data['id']+"?fn="+fn+"&ln="+ln+"&email="+email+"&receiveoffers="+receiveoffers+"&dob="+dob+"&gender="+gender+"&add1="+add1+"&add2="+add2+"&city="+city+"&state="+state+"&zip="+zipcode+"&phoneno="+phone;
+      var params = userObj.data['client code']+"?fn="+fn+"&ln="+ln+"&email="+email+"&receiveoffers="+receiveoffers+"&dob="+dob+"&gender="+gender+"&add1="+add1+"&add2="+add2+"&city="+city+"&state="+state+"&zip="+zipcode+"&phoneno="+phone;
 
       showLoadingIcon();
 
@@ -763,7 +764,7 @@
         timeout: 10000
       })
       .done(function(respond) {
-        getUser(userObj.data.id, userObj.data.password, 'details-confirmation');
+        getUser(userObj.data['client code'], userObj.data.password, 'details-confirmation');
         // hideLoadingIcon();
       })
       .fail(function(error) {
@@ -800,7 +801,7 @@
     }
     var url = "https://api.dentalsave.com/api/membership/additionalmember/", params = "";
     if (requestType == "POST") {
-      url = "https://api.dentalsave.com/api/membership/addmember/" + userObj.data['id'] + "/?&famfn="+fn+"&famln="+ln+"&famdob="+dob_month + "/" + dob_day + "/" + dob_year +"&famgender="+gender+"&famtype=On Plan";
+      url = "https://api.dentalsave.com/api/membership/addmember/" + userObj.data['client code'] + "/?&famfn="+fn+"&famln="+ln+"&famdob="+dob_month + "/" + dob_day + "/" + dob_year +"&famgender="+gender+"&famtype=On Plan";
     } else {
       userObj.family[selectedIndex]['first name'] = fn;
       userObj.family[selectedIndex]['last name'] = ln;
@@ -808,7 +809,7 @@
       userObj.family[selectedIndex]['gender'] = gender;
       userObj.family[selectedIndex]['family type'] = familytype;
 
-      url += userObj.data['id'] + "/?";
+      url += userObj.data['client code'] + "/?";
       var famCounts = 6; //Math.max(userObj.family.length, 6);
       for (var i = 0; i < famCounts; i++) {
         var element = {};
@@ -844,7 +845,7 @@
     })
     .done(function(respond) {
       hideLoadingIcon();
-      getUser(userObj.data.id, userObj.data.password, 'details-confirmation');
+      getUser(userObj.data['client code'], userObj.data.password, 'details-confirmation');
     })
     .fail(function(error) {
       hideLoadingIcon();
@@ -893,7 +894,7 @@
         } else {
           // hideAllContents();
           // $('.user-dashboard .profile-password-cong').addClass('visible');
-          getUser(userObj.data.id, userObj.data.password, 'password-confirmation');
+          getUser(userObj.data['client code'], userObj.data.password, 'password-confirmation');
         }
         hideLoadingIcon();
       })
@@ -922,7 +923,7 @@
     var payoption = $('.user-dashboard .profile-payment .section-1 .payoption').val();
 
     console.log(payoption);
-    var params = userObj.data.id + "?password=" +  password + "&autorenewal=" + autorenewal + "&payoption=" + payoption;
+    var params = userObj.data['client code'] + "?password=" +  password + "&autorenewal=" + autorenewal + "&payoption=" + payoption;
     showLoadingIcon();
 
     var text_autorenewal = (autorenewal == 1) ? "Yes" : "No";
@@ -945,7 +946,7 @@
       $('.user-dashboard .membership_fee .processing_fee').html('$' + respond.renewal.ProcessingFee);
       $('.user-dashboard .membership_fee .total').html('$' + respond.renewal.Total);
       $('.user-dashboard .profile-payment .section-2').addClass('visible');
-      // getUser(userObj.data.id, userObj.data.password, 'details-confirmation');
+      // getUser(userObj.data['client code'], userObj.data.password, 'details-confirmation');
     }).fail(function (error) {
       console.log(error);
       hideLoadingIcon();
@@ -990,7 +991,7 @@
 
         hideAllContents();
         // $('.user-dashboard .profile-refer-box .profile-refer-cong').addClass('visible');
-        getUser(userObj.data.id, userObj.data.password, 'profile-confirmation');
+        getUser(userObj.data['client code'], userObj.data.password, 'profile-confirmation');
         // hideLoadingIcon();
       })
       .fail(function(error) {
@@ -1085,7 +1086,7 @@
         } else if (status == "Inactive") {
           option = "inactive";
         }
-        getUser(userObj.data.id, userObj.data.password, 'payment-confirmation', option);
+        getUser(userObj.data['client code'], userObj.data.password, 'payment-confirmation', option);
         // hideLoadingIcon();
       })
       .fail(function(error) {

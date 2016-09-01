@@ -4,7 +4,7 @@ function dentalsave_child_styles() {
     wp_enqueue_style( 'dentalsave-fa', '//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' );
     wp_enqueue_script( 'dentalsave-inputmask', get_stylesheet_directory_uri() . '/js/jquery.inputmask.bundle.js', array('jquery'), '1.0', true );
     wp_enqueue_script( 'dentalsave-script', get_stylesheet_directory_uri() . '/js/custom.js', array('jquery'), '1.0', true );
-    
+
 }
 add_action( 'wp_enqueue_scripts', 'dentalsave_child_styles', 20 );
 
@@ -36,10 +36,10 @@ function login_redirect()
     $cookie_name = 'user';
     if( isset($_COOKIE[$cookie_name]) ) //&& !is_page('User Dashboard')
     {
-        if ( !is_page('User Dashboard') ) {
-            wp_redirect( home_url( '/user-dashboard/' ) );
-            exit();
-        }
+        // if ( !is_page('User Dashboard') ) {
+        //     wp_redirect( home_url( '/user-dashboard/' ) );
+        //     exit();
+        // }
     } else {
         if (is_page('User Dashboard')) {
             wp_redirect( home_url( '/dental-plans-member-login/' ) );
@@ -47,6 +47,17 @@ function login_redirect()
     }
 }
 add_action( 'template_redirect', 'login_redirect' );
+
+// Apply filter
+add_filter('body_class', 'multisite_body_classes');
+
+function multisite_body_classes($classes) {
+  $cookie_name = 'user';
+  if( isset($_COOKIE[$cookie_name]) ) {
+    $classes[] = 'user-logged-in';
+  }
+  return $classes;
+}
 
 /*------------------------------------------------------------*/
 /* Dental Saving Fee Table
