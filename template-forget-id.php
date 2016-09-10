@@ -10,6 +10,7 @@
   <div class="section w600 center">
     <h1 class="fs45">Recover your Member ID</h1>
     <p>Enter your Information in the form below to retrieve your login details.</p>
+    <p class="error error-notavailable">Sorry, We can't find a Member ID.</p>
     <p class="error error-missing">There are missing fields</p>
     <p class="error error-email">Email is invalid</p>
     <form id="member-recover-id" class="w400" method="post">
@@ -97,6 +98,8 @@
       hideLoadingIcon();
       if (res.data.client_code != null) {
         window.location.href = "/member-id-request-confirmation/?id="+res.data.client_code;
+      } else {
+        $('.main-container .error-notavailable').removeClass('error-visible').addClass('error-visible');
       }
 
     })

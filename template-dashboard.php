@@ -721,7 +721,6 @@
 
   $('.user-dashboard .edit-profile-details-submit').on('click', function(event) {
     event.preventDefault();
-    return;
     var userObj = JSON.parse(getCookie('user'));
 
     $('.user-dashboard .edit-profile-details .error').removeClass('error-visible');
