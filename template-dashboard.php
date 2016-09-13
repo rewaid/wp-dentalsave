@@ -922,7 +922,7 @@
     var payoption = $('.user-dashboard .profile-payment .section-1 .payoption').val();
 
     console.log(payoption);
-    var params = userObj.data['client code'] + "?password=" +  password + "&autorenewal=" + autorenewal + "&payoption=" + payoption;
+    var params = userObj.data.id + "?password=" +  password + "&autorenewal=" + autorenewal + "&payoption=" + payoption;
     showLoadingIcon();
 
     var text_autorenewal = (autorenewal == 1) ? "Yes" : "No";
